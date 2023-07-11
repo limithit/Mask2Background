@@ -133,12 +133,6 @@ def run_get_mask(input_image):
 def on_ui_tabs():
     global sam_dict
     
-    # setup_ia_config_ini()
-    # sam_model_index = get_ia_config_index(IAConfig.KEY_SAM_MODEL_ID, IAConfig.SECTION_USER)
-    # sam_model_index = sam_model_index if sam_model_index is not None else 1
-    # inp_model_index = get_ia_config_index(IAConfig.KEY_INP_MODEL_ID, IAConfig.SECTION_USER)
-    # inp_model_index = inp_model_index if inp_model_index is not None else 0
-    
     with gr.Blocks(analytics_enabled=False) as inpaint_anything_interface:
         with gr.Row():
             with gr.Column():
@@ -158,7 +152,7 @@ def on_ui_tabs():
                             get_mask_btn = gr.Button("Get mask", elem_id="get_mask_btn")                   
                     with gr.Row():
                         with gr.Column():
-                            mask_out_image = gr.Image(label="Mask image", elem_id="mask_out_image", type="numpy", interactive=False)
+                            mask_out_image = gr.Image(label="Get mask image", elem_id="mask_out_image", type="numpy", interactive=False)
                     with gr.Row():
                         # with gr.Column():
                         #     get_alpha_status_text = gr.Textbox(label="", elem_id="get_alpha_status_text", max_lines=1, show_label=False, interactive=False)
@@ -167,7 +161,7 @@ def on_ui_tabs():
             
             with gr.Column():
                 with gr.Row():
-                    sam_image = gr.Image(label="Segment Anything image", elem_id="sam_image", type="numpy", tool="sketch", brush_radius=8,
+                    sam_image = gr.Image(label="Fill the background image", elem_id="sam_image", type="numpy", tool="sketch", brush_radius=8,
                                         interactive=True).style(height=480)
                 with gr.Row():
                     with gr.Column():
@@ -175,7 +169,7 @@ def on_ui_tabs():
                     # with gr.Column():
                     #     invert_chk = gr.Checkbox(label="Invert mask", elem_id="invert_chk", show_label=True, interactive=True)
                 with gr.Row():
-                    sel_mask = gr.Image(label="Selected mask image", elem_id="sel_mask", type="numpy", tool="sketch", brush_radius=12,
+                    sel_mask = gr.Image(label="Create mask image", elem_id="sel_mask", type="numpy", tool="sketch", brush_radius=12,
                                         interactive=True).style(height=480)
             
             input_image.upload(input_image_upload, inputs=[input_image, sam_image, sel_mask], outputs=[sam_image, sel_mask, sam_btn])
