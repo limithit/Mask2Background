@@ -33,6 +33,8 @@ To install the software, please follow these steps:
 
 ![UI image](img.png)
 
+![UI image](img2.png)
+
 ## Auto-saving images
 
 * The inpainted image will be automatically saved in the folder that matches the current date within the `outputs/inpaint-anything` directory.
