@@ -48,7 +48,6 @@ def input_image_upload(input_image, sam_image, sel_mask):
     return ret_sam_image, ret_sel_mask, gr.update(interactive=True)
 
 @clear_cache_decorator
-# 透明区域换成白色，非透明区域换成黑色
 # def create_mask(input_image):
 #     global sam_dict
 #     input_image = input_image.astype(np.uint8)
@@ -68,10 +67,8 @@ def input_image_upload(input_image, sam_image, sel_mask):
 def create_mask(input_image):
     global sam_dict
 
-    # 将输入图像转换为8位无符号整数类型
     input_image_8bit = cv2.normalize(input_image, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
 
-    # 创建掩膜图像
     transparent_mask = np.all(input_image_8bit == [0, 0, 0], axis=-1)
     non_transparent_mask = ~transparent_mask
     white_color = [255, 255, 255]
@@ -80,31 +77,28 @@ def create_mask(input_image):
     black_array = np.ones_like(input_image_8bit) * black_color
     input_image_8bit = np.multiply(white_array, transparent_mask[..., np.newaxis]) + np.multiply(black_array, non_transparent_mask[..., np.newaxis])
 
-    # 将掩膜图像存储到全局变量sam_dict中
     sam_dict["mask_image"] = input_image_8bit
 
     return input_image_8bit
 
 
-# 透明区域换成白色，非透明区域不变
 def transparent_to_white(input_image):
-    b, g, r = cv2.split(input_image)  # 分解为 RGB 通道
+    b, g, r = cv2.split(input_image)  
 
-    transparent_mask = (b == 0) & (g == 0) & (r == 0)  # 透明掩码，选中透明像素
-    white_color = [255, 255, 255]  # 白色像素颜色
-    # white_color = [0, 255, 0]  # 绿色像素颜色，比较明显
+    transparent_mask = (b == 0) & (g == 0) & (r == 0)  
+    white_color = [255, 255, 255]  
 
-    b[transparent_mask] = white_color[0]  # 替换透明像素为白色像素
+    b[transparent_mask] = white_color[0]  
     g[transparent_mask] = white_color[1]
     r[transparent_mask] = white_color[2]
-    return cv2.merge((b, g, r))  # 合并 RGB 通道为图像数组
+    return cv2.merge((b, g, r))  
 
 @clear_cache_decorator
 def run_sam(input_image, sam_image):
     ia_logging.info(f"input_image: {input_image.shape} {input_image.dtype}")
     ia_logging.info(f"input_image: {type(input_image)}")
     sam_image = transparent_to_white(input_image)
-    return gr.update(value=sam_image), "Fill background with green to complete"
+    return gr.update(value=sam_image), "Fill background with white to complete"
 
 @clear_cache_decorator
 def select_mask(input_image, sam_image, invert_chk, sel_mask):
@@ -154,8 +148,6 @@ def on_ui_tabs():
                         with gr.Column():
                             mask_out_image = gr.Image(label="Get mask image", elem_id="mask_out_image", type="numpy", interactive=False)
                     with gr.Row():
-                        # with gr.Column():
-                        #     get_alpha_status_text = gr.Textbox(label="", elem_id="get_alpha_status_text", max_lines=1, show_label=False, interactive=False)
                         with gr.Column():
                             mask_send_to_inpaint_btn = gr.Button("Send to img2img inpaint", elem_id="mask_send_to_inpaint_btn")
             
@@ -166,8 +158,6 @@ def on_ui_tabs():
                 with gr.Row():
                     with gr.Column():
                         select_btn = gr.Button("Create mask", elem_id="select_btn")
-                    # with gr.Column():
-                    #     invert_chk = gr.Checkbox(label="Invert mask", elem_id="invert_chk", show_label=True, interactive=True)
                 with gr.Row():
                     sel_mask = gr.Image(label="Create mask image", elem_id="sel_mask", type="numpy", tool="sketch", brush_radius=12,
                                         interactive=True).style(height=480)
