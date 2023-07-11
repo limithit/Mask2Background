@@ -146,7 +146,7 @@ def on_ui_tabs():
                             get_mask_btn = gr.Button("Get mask", elem_id="get_mask_btn")                   
                     with gr.Row():
                         with gr.Column():
-                            mask_out_image = gr.Image(label="Get mask image", elem_id="mask_out_image", type="numpy", interactive=False)
+                            mask_out_image = gr.Image(label="Get mask image", elem_id="mask_out_image", type="numpy", interactive=False).style(height=480)
                     with gr.Row():
                         with gr.Column():
                             mask_send_to_inpaint_btn = gr.Button("Send to img2img inpaint", elem_id="mask_send_to_inpaint_btn")
