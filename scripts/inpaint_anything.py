@@ -149,7 +149,7 @@ def run_get_mask(input_image):
 def on_ui_tabs():
     global sam_dict
     
-    with gr.Blocks(analytics_enabled=False) as inpaint_anything_interface:
+    with gr.Blocks(analytics_enabled=False) as Mask2Background_interface:
         with gr.Row():
             with gr.Column():
                 with gr.Row():
@@ -186,7 +186,7 @@ def on_ui_tabs():
             
             input_image.upload(input_image_upload, inputs=[input_image, sam_image, sel_mask], outputs=[sam_image, sel_mask, sam_btn])
             sam_btn.click(run_sam, inputs=[input_image, sam_image], outputs=[sam_image, status_text]).then(
-                fn=None, inputs=None, outputs=None, _js="inpaintAnything_clearSamMask")
+                fn=None, inputs=None, outputs=None, _js="Mask2Background_clearSamMask")
             select_btn.click(
                 select_mask, 
                 inputs=[input_image],
@@ -198,19 +198,19 @@ def on_ui_tabs():
                 outputs=[mask_out_image])
             mask_send_to_inpaint_btn.click(
                 fn=None,
-                _js="inpaintAnything_sendToInpaint",
+                _js="Mask2Background_sendToInpaint",
                 inputs=None,
                 outputs=None)        
 
-    return [(inpaint_anything_interface, "Generate Mask&Background", "inpaint_anything")]
+    return [(Mask2Background_interface, "Generate Mask&Background", "Mask2Background")]
 
 def on_ui_settings():
-    section = ("inpaint_anything", "Generate Mask&Background")
-    shared.opts.add_option("inpaint_anything_save_folder", shared.OptionInfo(
-        "inpaint-anything", "Folder name where output images will be saved", gr.Radio, {"choices": ["inpaint-anything", "img2img-images"]}, section=section))
-    shared.opts.add_option("inpaint_anything_offline_inpainting", shared.OptionInfo(
+    section = ("Mask2Background", "Generate Mask&Background")
+    shared.opts.add_option("Mask2Background_save_folder", shared.OptionInfo(
+        "Mask2Background", "Folder name where output images will be saved", gr.Radio, {"choices": ["Mask2Background", "img2img-images"]}, section=section))
+    shared.opts.add_option("Mask2Background_offline_inpainting", shared.OptionInfo(
         False, "Enable offline network Inpainting", gr.Checkbox, {"interactive": True}, section=section))
-    shared.opts.add_option("inpaint_anything_padding_fill", shared.OptionInfo(
+    shared.opts.add_option("Mask2Background_padding_fill", shared.OptionInfo(
         127, "Fill value used when Padding is set to constant", gr.Slider, {"minimum":0, "maximum":255, "step":1}, section=section))
 
 script_callbacks.on_ui_settings(on_ui_settings)

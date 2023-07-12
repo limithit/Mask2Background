@@ -1,4 +1,4 @@
-async function inpaintAnything_sendToInpaint() {
+async function Mask2Background_sendToInpaint() {
 
 	const waitForElement = async (
 	    parent,
@@ -76,7 +76,7 @@ async function inpaintAnything_sendToInpaint() {
 	await updateGradioImage(document.querySelector("#img_inpaint_mask"), maskImgDataUrl, "mask.png");
 }
 
-async function inpaintAnything_clearSamMask() {
+async function Mask2Background_clearSamMask() {
 	await new Promise(s => setTimeout(s, 300));
 
 	const sam_mask_clear = document.querySelector("#sam_image").querySelector("button[aria-label='Clear']");
@@ -95,7 +95,7 @@ async function inpaintAnything_clearSamMask() {
 	);
 }
 
-async function inpaintAnything_clearSelMask() {
+async function Mask2Background_clearSelMask() {
 	await new Promise(s => setTimeout(s, 300));
 
 	const sel_mask_clear = document.querySelector("#sel_mask").querySelector("button[aria-label='Clear']");
