@@ -13,7 +13,7 @@ To install the software, please follow these steps:
 * Enter `https://github.com/limithit/Mask2Background.git` in the `URL for extension's git repository` field.
 * Click on the `Install` button.
 * Once installation is complete, restart the Web UI.
-* Note: This extension supports v1.3.0 or higher of AUTOMATIC1111's Stable Diffusion Web UI.
+* Note: This extension supports v1.4.0 or higher of AUTOMATIC1111's Stable Diffusion Web UI.
 
 
 ## Usage
@@ -27,7 +27,6 @@ To install the software, please follow these steps:
 ### Mask only Tab
 
 * Gives ability to just save mask without any other processing, so it's then possible to use the mask in img2img's `Inpaint upload` with any model/extensions/tools you already have in your AUTOMATIC1111.
-* `Get mask as alpha of image` button: Save the mask as RGBA image.
 * `Get mask` button: Save the mask as RGB image.
 * After the `Get mask` button press you can use `Send to img2img inpaint` button under the mask image to send both input image and mask to the img2img tab.
 
