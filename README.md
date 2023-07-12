@@ -2,6 +2,8 @@
 
 The png image, transparent area replaced with white, and generate a black mask, and finally send the other to img-to-img, and then enter the prompt word to generate a new background, in short, it is to give the product for the background!
 
+## Your png image must be in RGB/8# mode, if not it can be converted under 'https://www.birme.net/'
+
 [Standalone version](https://github.com/limithit/Mask2Background/)
 
 ## Installation

@@ -72,36 +72,47 @@ def input_image_upload(input_image, sam_image, sel_mask):
 @clear_cache_decorator
 # def create_mask(input_image):
 #     global sam_dict
-#     input_image = input_image.astype(np.uint8)
-#     transparent_mask = np.all(input_image == [0, 0, 0], axis=-1)
-#     non_transparent_mask = ~transparent_mask
 
+#     input_image_8bit = cv2.normalize(input_image, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
+
+#     transparent_mask = np.all(input_image_8bit == [0, 0, 0], axis=-1)
+#     non_transparent_mask = ~transparent_mask
 #     white_color = [255, 255, 255]
 #     black_color = [0, 0, 0]
+#     white_array = np.ones_like(input_image_8bit) * white_color
+#     black_array = np.ones_like(input_image_8bit) * black_color
+#     input_image_8bit = np.multiply(white_array, transparent_mask[..., np.newaxis]) + np.multiply(black_array, non_transparent_mask[..., np.newaxis])
 
-#     white_array = np.ones_like(input_image) * white_color
-#     black_array = np.ones_like(input_image) * black_color
+#     sam_dict["mask_image"] = input_image_8bit
 
-#     input_image = np.multiply(white_array, transparent_mask[..., np.newaxis]) + np.multiply(black_array, non_transparent_mask[..., np.newaxis])
-#     sam_dict["mask_image"] = input_image
-
-#     return input_image
+#     return input_image_8bit
 def create_mask(input_image):
     global sam_dict
 
-    input_image_8bit = cv2.normalize(input_image, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
+    if input_image.ndim == 2:
+        input_image = cv2.cvtColor(input_image, cv2.COLOR_GRAY2RGBA)
+    elif input_image.ndim == 3 and input_image.shape[2] == 3:
+        input_image = cv2.cvtColor(input_image, cv2.COLOR_RGB2RGBA)
 
-    transparent_mask = np.all(input_image_8bit == [0, 0, 0], axis=-1)
+    if input_image.shape[2] != 4:
+        alpha_channel = np.ones((input_image.shape[0], input_image.shape[1], 1), dtype=np.uint8) * 255
+        input_image = np.concatenate([input_image, alpha_channel], axis=-1)
+
+    transparent_mask = input_image[..., 3] == 0
     non_transparent_mask = ~transparent_mask
-    white_color = [255, 255, 255]
-    black_color = [0, 0, 0]
-    white_array = np.ones_like(input_image_8bit) * white_color
-    black_array = np.ones_like(input_image_8bit) * black_color
-    input_image_8bit = np.multiply(white_array, transparent_mask[..., np.newaxis]) + np.multiply(black_array, non_transparent_mask[..., np.newaxis])
 
-    sam_dict["mask_image"] = input_image_8bit
+    if np.any(transparent_mask):
+        white_array = np.ones_like(input_image) * [255, 255, 255, 255, 255]
+        black_array = np.zeros_like(input_image) * [0, 0, 0, 255, 0]
+        input_image_rgba = np.concatenate([input_image, np.ones_like(input_image[..., :1]) * 255], axis=-1)
+        input_image_rgba[transparent_mask] = white_array[transparent_mask]
+        input_image_rgba[non_transparent_mask] = black_array[non_transparent_mask]
 
-    return input_image_8bit
+        sam_dict["mask_image"] = input_image_rgba
+
+        return input_image_rgba
+    else:
+        raise ValueError("Input image has no transparent pixels.")
 
 
 def transparent_to_white(input_image):
