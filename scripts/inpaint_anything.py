@@ -6,22 +6,44 @@ import gradio as gr
 from datetime import datetime
 
 import cv2
-
+import gc
+import logging
+from modules.devices import torch_gc
+from functools import wraps
 from modules import shared, script_callbacks
 try:
     from modules.paths_internal import extensions_dir
 except Exception:
     from modules.extensions import extensions_dir
 
-from ia_logging import ia_logging
-
-from ia_threading import (clear_cache_decorator)
-
 ia_outputs_dir = os.path.join(os.path.dirname(extensions_dir),
                           "outputs", "inpaint-anything",
                           datetime.now().strftime("%Y-%m-%d"))
 
 sam_dict = dict(sam_masks=None, mask_image=None, cnet=None, orig_image=None, pad_mask=None)
+
+ia_logging = logging.getLogger("Mask2Background")
+ia_logging.setLevel(logging.INFO)
+ia_logging.propagate = False
+
+ia_logging_sh = logging.StreamHandler()
+ia_logging_sh.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+ia_logging_sh.setLevel(logging.INFO)
+ia_logging.addHandler(ia_logging_sh)
+
+def clear_cache():
+    gc.collect()
+    torch_gc()
+
+
+def clear_cache_decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        clear_cache()
+        res = func(*args, **kwargs)
+        clear_cache()
+        return res
+    return wrapper
 
 def update_ia_outputs_dir():
     """Update inpaint-anything outputs directory.
