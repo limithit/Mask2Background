@@ -70,39 +70,43 @@ def input_image_upload(input_image, sam_image, sel_mask):
     return ret_sam_image, ret_sel_mask, gr.update(interactive=True)
 
 @clear_cache_decorator
-def create_mask(input_image):
+def create_mask(img, white_bg=True):
+    """
+    Generate a binary mask of the image (i.e. black and white image)
+    Args.
+        img_path: str, input image path
+        white_bg: bool, if or not change the transparent area to white, default is True
+    Returns.
+        numpy.ndarray, the binary mask of the image.
+    """
     global sam_dict
+    black_pixel = (0, 0, 0, 255)
+    white_pixel = (255, 255, 255, 255)
 
-    input_image_8bit = cv2.normalize(input_image, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
-
-    transparent_mask = np.all(input_image_8bit == [0, 0, 0], axis=-1)
-    non_transparent_mask = ~transparent_mask
-    white_color = [255, 255, 255]
-    black_color = [0, 0, 0]
-    white_array = np.ones_like(input_image_8bit) * white_color
-    black_array = np.ones_like(input_image_8bit) * black_color
-    input_image_8bit = np.multiply(white_array, transparent_mask[..., np.newaxis]) + np.multiply(black_array, non_transparent_mask[..., np.newaxis])
-
-    sam_dict["mask_image"] = input_image_8bit
-
-    return input_image_8bit
-
-
+    for h in range(img.width):
+        for w in range(img.height):
+            if img.getpixel((h, w))[3] == 0:
+                if white_bg:
+                    img.putpixel((h, w), white_pixel)
+            else:
+                img.putpixel((h, w), black_pixel)
+    np_array = np.array(img)
+    sam_dict["mask_image"] = np_array
+    return np_array
 
 def transparent_to_white(input_image):
-    b, g, r = cv2.split(input_image)  
+    W, H = input_image.size
+    white_pixel = (255, 255, 255, 255)
+    for h in range(W):
+        for w in range(H):
+            if input_image.getpixel((h, w))[3] == 0:
+                input_image.putpixel((h, w), white_pixel)
+    np_array = np.array(input_image)
 
-    transparent_mask = (b == 0) & (g == 0) & (r == 0)  
-    white_color = [255, 255, 255]  
-
-    b[transparent_mask] = white_color[0]  
-    g[transparent_mask] = white_color[1]
-    r[transparent_mask] = white_color[2]
-    return cv2.merge((b, g, r))  
+    return np_array
 
 @clear_cache_decorator
 def run_sam(input_image, sam_image):
-    ia_logging.info(f"input_image: {input_image.shape} {input_image.dtype}")
     ia_logging.info(f"input_image: {type(input_image)}")
     sam_image = transparent_to_white(input_image)
     return gr.update(value=sam_image), "Fill background with white to complete"
@@ -141,7 +145,7 @@ def on_ui_tabs():
                         with gr.Row():
                             status_text = gr.Textbox(label="", elem_id="status_text", max_lines=1, show_label=False, interactive=False)
                 with gr.Row():
-                    input_image = gr.Image(label="Input image", elem_id="input_image", source="upload", type="numpy", interactive=True)
+                    input_image = gr.Image(label="Input image", elem_id="input_image", source="upload", type="pil",image_mode="RGBA", interactive=True)
                 
                 
                 with gr.Row():
