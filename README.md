@@ -22,7 +22,7 @@ To install the software, please follow these steps:
 
 * Drag and drop your image onto the input image area.
 * Click on the `Run Fill the background` button.
-* Use sketching to point the area you want to inpaint. You can undo and adjust the pen size.
+ ~~ * Use sketching to point the area you want to inpaint. You can undo and adjust the pen size. ~~
 * Click on the `Create mask` button. The mask will appear in the selected mask image area.
 
 
