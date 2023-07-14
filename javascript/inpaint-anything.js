@@ -84,10 +84,19 @@ async function Mask2Background_sendToInpaint() {
 
 	await updateGradioImage(document.querySelector("#img_inpaint_base"), inputImgDataUrl, "input.png");
 	await updateGradioImage(document.querySelector("#img_inpaint_mask"), maskImgDataUrl, "mask.png");
-	// document.querySelector("#img2img_inpainting_fill").children[2].querySelectorAll("label")[0].querySelector("input[type=radio]").checked = true;
-	document.querySelector("#img2img_width").children[1].querySelector("input").value = size.width;
-	document.querySelector("#img2img_height").children[1].querySelector("input").value = size.height;
-	
+
+	const event = new Event('input', { bubbles: true })
+	let widthDom = document.querySelector("#img2img_width").children[1].querySelector("input")
+	widthDom.value = size.width;
+	widthDom.dispatchEvent(event)
+
+	let heightDom = document.querySelector("#img2img_height").children[1].querySelector("input")
+	heightDom.value = size.height;
+	heightDom.dispatchEvent(event)
+
+	// let radioDom = document.querySelector("#img2img_inpainting_fill").children[2].querySelectorAll("label")[0].querySelector("input[type=radio]")
+	// radioDom.checked = true;
+	// radioDom.dispatchEvent(event)
 }
 
 async function Mask2Background_clearSamMask() {
