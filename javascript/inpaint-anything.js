@@ -56,6 +56,16 @@ async function Mask2Background_sendToInpaint() {
 	    );
 	    await waitForElementToBeInDocument(element, "button[aria-label='Clear']");
 	}
+    const getImageSizeFromElement = (imageElement) => {
+		return {
+		  width: imageElement.naturalWidth,
+		  height: imageElement.naturalHeight,
+		};
+	  };
+
+
+	const imageElement = document.querySelector("#sam_image img");
+	const size = getImageSizeFromElement(imageElement);
 
 	const inputImg = document.querySelector("#sam_image img");
 	const maskImg = document.querySelector("#mask_out_image img");
@@ -74,6 +84,10 @@ async function Mask2Background_sendToInpaint() {
 
 	await updateGradioImage(document.querySelector("#img_inpaint_base"), inputImgDataUrl, "input.png");
 	await updateGradioImage(document.querySelector("#img_inpaint_mask"), maskImgDataUrl, "mask.png");
+	// document.querySelector("#img2img_inpainting_fill").children[2].querySelectorAll("label")[0].querySelector("input[type=radio]").checked = true;
+	document.querySelector("#img2img_width").children[1].querySelector("input").value = size.width;
+	document.querySelector("#img2img_height").children[1].querySelector("input").value = size.height;
+	
 }
 
 async function Mask2Background_clearSamMask() {
