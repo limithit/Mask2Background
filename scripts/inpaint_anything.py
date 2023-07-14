@@ -109,7 +109,8 @@ def transparent_to_white(input_image):
 def run_sam(input_image, sam_image):
     ia_logging.info(f"input_image: {type(input_image)}")
     sam_image = transparent_to_white(input_image)
-    return gr.update(value=sam_image), "Fill background with white to complete"
+    width, height = input_image.size
+    return gr.update(value=sam_image), f"Fill background with white to complete,Image dimensions: {width}x{height}"
 
 @clear_cache_decorator
 def select_mask(input_image, sam_image, invert_chk, sel_mask):
