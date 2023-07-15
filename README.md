@@ -18,7 +18,7 @@ To install the software, please follow these steps:
 * Note: This extension supports v1.4.0 or higher of AUTOMATIC1111's Stable Diffusion Web UI.
 
 ## How update
-* Delete the `extensions/Mask2Background`,restart the Web UI.
+* Delete the `extensions/Mask2Background` and then restart the Web UI.
 * Repeat the first installation steps 
 
 ## Usage
