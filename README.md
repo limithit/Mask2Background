@@ -34,6 +34,8 @@ To install the software, please follow these steps:
 * Gives ability to just save mask without any other processing, so it's then possible to use the mask in img2img's `Inpaint upload` with any model/extensions/tools you already have in your AUTOMATIC1111.
 * `Get mask` button: Save the mask as RGB image.
 * After the `Get mask` button press you can use `Send to img2img inpaint` button under the mask image to send both input image and mask to the img2img tab.
+  
+![UI image](img3.png)
 
 ![UI image](img.png)
 
