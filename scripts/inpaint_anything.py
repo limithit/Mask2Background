@@ -158,7 +158,7 @@ def on_ui_tabs():
                             get_mask_btn = gr.Button("Get mask", elem_id="get_mask_btn")                   
                     with gr.Row():
                         with gr.Column():
-                            mask_out_image = gr.Image(label="Get mask image", elem_id="mask_out_image", type="numpy", interactive=False).style(height=480)
+                            mask_out_image = gr.Image(label="Get mask image", elem_id="mask_out_image", type="numpy", interactive=False, height=480)
                     with gr.Row():
                         with gr.Column():
                             mask_send_to_inpaint_btn = gr.Button("Send to img2img inpaint", elem_id="mask_send_to_inpaint_btn")
@@ -166,13 +166,13 @@ def on_ui_tabs():
             with gr.Column():
                 with gr.Row():
                     sam_image = gr.Image(label="Fill the background image", elem_id="sam_image", type="numpy", tool="sketch", brush_radius=8,
-                                        interactive=True).style(height=480)
+                                        interactive=True, height=480)
                 with gr.Row():
                     with gr.Column():
                         select_btn = gr.Button("Create mask", elem_id="select_btn")
                 with gr.Row():
                     sel_mask = gr.Image(label="Create mask image", elem_id="sel_mask", type="numpy", tool="sketch", brush_radius=12,
-                                        interactive=True).style(height=480)
+                                        interactive=True, height=480)
             
             input_image.upload(input_image_upload, inputs=[input_image, sam_image, sel_mask], outputs=[sam_image, sel_mask, sam_btn])
             sam_btn.click(run_sam, inputs=[input_image, sam_image], outputs=[sam_image, status_text]).then(
